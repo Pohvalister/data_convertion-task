@@ -18,6 +18,7 @@ int main()
 
 	//third task usage
 	List list;
+	list.clear();
 	FILE* tmp_file = tmpfile();
 	list.Serialize(tmp_file);
 	list.Deserialize(tmp_file);

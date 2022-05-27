@@ -10,29 +10,29 @@ namespace {
 		: file(f){}
 		FILE * const file;
 
-		void put (const std::size_t val) const{ // мб назвать как гетеры?
-			fwrite(&val, sizeof(std::size_t), 1, file);
+		void put (const int val) const{ // мб назвать как гетеры?
+			fwrite(&val, sizeof(int), 1, file);
 		}
 		void put (const std::vector<int>& vec) const{
-			std::size_t len = vec.size();
+			int len = vec.size();
 			fwrite(&len, sizeof(int), 1, file);
 			fwrite((int *) &vec[0], sizeof(int), len, file);
 		}
 		void put (const std::string& str) const{
-			std::size_t len = str.size();
-			fwrite(&len, sizeof(std::size_t), 1, file);
+			int len = str.size();
+			fwrite(&len, sizeof(int), 1, file);
 			fwrite(str.c_str(), sizeof(char), len, file);
 		}
 
-		std::size_t getVal () const{
-			std::size_t val;
-			fread(&val, sizeof(std::size_t), 1, file);
+		int getVal() const{
+			int val;
+			fread(&val, sizeof(int), 1, file);
 			return val;
 		}
 
 		std::vector<int> getVec() const{
-			std::size_t len;//getVal
-			fread(&len, sizeof(std::size_t), 1, file);
+			int len;//getVal
+			fread(&len, sizeof(int), 1, file);
 			if (!len)
 				return  {};
 
@@ -42,8 +42,8 @@ namespace {
 		}
 
 		std::string getStr() const{
-			std::size_t len;
-			fread(&len, sizeof(std::size_t), 1, file);
+			int len;
+			fread(&len, sizeof(int), 1, file);
 			if (!len)
 				return "";
 
@@ -57,7 +57,7 @@ namespace {
 
 void List::clear(){
 	if (head == NULL){
-		assert(tail != NULL);
+		assert(tail == NULL);
 		return;
 	}
 
@@ -79,14 +79,15 @@ void List::Serialize(FILE* file){
 	if (head == NULL){
 		assert(tail == NULL);
 		file_handler.put(0);
+		return;
 	}
 
 	std::unordered_map<ListNode*, int> number_comp;
 
 	ListNode* curr = head;
-	std::size_t counter = 1;
+	int counter = 1;
 	while (curr != tail){
-		assert(number_comp.find(curr) != number_comp.end());
+		assert(number_comp.find(curr) == number_comp.end());
 		number_comp[curr] = counter++;
 		curr = curr->next;
 	}
@@ -109,9 +110,11 @@ void List::Serialize(FILE* file){
 	curr = head;
 	counter = 0;
 	while(curr != tail){
+		std::cout<<"data put: "<< curr->data << '\n';
 		file_handler.put(curr->data);
 		curr = curr->next;
 	}
+	file_handler.put(curr->data);
 }
 
 //перезаписывает имеющиеся данные новыми из файла
@@ -119,7 +122,7 @@ void List::Deserialize(FILE* file){
 	FileHandler file_handler(file);
 	clear();
 
-	std::size_t amount = file_handler.getVal();
+	int amount = file_handler.getVal();
 	if (!amount)
 		return;
 
@@ -127,7 +130,7 @@ void List::Deserialize(FILE* file){
 	pointer_comp[0]=NULL;
 	head = new ListNode();
 	ListNode* curr = head;
-	for (std::size_t i = 1; i < amount; i++){
+	for (int i = 1; i < amount; i++){
 		pointer_comp[i] = curr;
 		ListNode* new_curr = new ListNode();
 		new_curr->prev = curr;

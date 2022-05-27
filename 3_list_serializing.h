@@ -2,6 +2,7 @@
 #define LIST_SERIALIZING_H
 #include <iostream>
 
+
 // структуру ListNode модифицировать нельзя
 struct ListNode {
 	ListNode *	prev;
@@ -12,15 +13,16 @@ struct ListNode {
 
 class List {
 public:
+
 	void Serialize	(FILE * file); // сохранение в файл (файл открыт с помощью fopen(path, "wb"))
 	void Deserialize (FILE * file); // загрузка из файла (файл открыт с помощью fopen(path, "rb"))
 
-private:
-	ListNode *	head;
-	ListNode *	tail;
-	int	count;
+protected:
+	ListNode *	head = NULL;
+	ListNode *	tail = NULL;
+	int	count = 0;
 
-private:
+public:
 	void clear();
 
 	struct DataCollector;
