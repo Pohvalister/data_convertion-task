@@ -73,7 +73,7 @@ void List::clear(){
 	count = 0;
 }
 
-//заполняет файл внутренними данными, сохраняя своё состаяние
+//заполняет файл внутренними данными, сохраняя своё состояние
 void List::Serialize(FILE* file){
 	FileHandler file_handler(file);
 	if (head == NULL){

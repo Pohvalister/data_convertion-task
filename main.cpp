@@ -6,15 +6,17 @@
 
 int main()
 {
-	// first usage
-	std::cout << toBin(0) << std::endl;
+	// first task usage
+	int val;
+	std::cin>>val;
+	std::cout << toBin<int>(val) << std::endl;
 
-	// second usage
+	// second task usage
 	char data[] = "AAA BBB AAA";
 	RemoveDups(data);
 	printf("%s\n", data);
 
-	//third usage
+	//third task usage
 	List list;
 	FILE* tmp_file = tmpfile();
 	list.Serialize(tmp_file);

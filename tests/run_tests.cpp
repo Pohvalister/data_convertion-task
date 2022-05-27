@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
 #include <bitset>
 #include <algorithm>
+#include <iostream>
 
 #include "../1_int_to_bin.h"
 
 TEST(int_to_bin, basic_work){
-	ASSERT_EQ(toBin(0),"0");
-	ASSERT_EQ(toBin(1), "1");
-	ASSERT_EQ(toBin(-1), "11");
+	ASSERT_EQ(std::string (toBin<char>(0)),	"00000000");
+	ASSERT_EQ(std::string (toBin<char>(1)),	"00000001");
+	ASSERT_EQ(std::string (toBin<char>(-1)),	"11111111");
 }
 
 TEST(int_to_bin, bitset_comparison){
@@ -15,7 +16,7 @@ TEST(int_to_bin, bitset_comparison){
 		int val_to_compare = rand();
 		val_to_compare *= ( i%2 ? 1 : -1 );
 		std::string examer = std::bitset<sizeof(int) * 8>(val_to_compare).to_string();
-		std::string examed = toBin(val_to_compare);
+		std::string examed (toBin<int>(val_to_compare));
 		std::cout << "testing int: " << val_to_compare << '\n';
 		EXPECT_EQ(examer, examed);
 	}
@@ -52,7 +53,19 @@ TEST(remove_dups, unique_copy_comparison){
 		std::string examed(data);
 
 		ASSERT_EQ(examer2, examed);
-
 	}
+}
+
+#include "../3_list_serializing.h"
+
+TEST(list_serializing, work_checking){
+	List list;
+	FILE* tmp_file = tmpfile();
+	/*EXPECT_NO_FATAL_FAILURE(list.Serialize(tmp_file));
+	EXPECT_NO_FATAL_FAILURE(list.Deserialize(tmp_file));*/
+}
+
+TEST(list_serializing, basic_work){
+
 }
 
