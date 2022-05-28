@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include <bitset>
 #include <algorithm>
-#include <iostream>
+
+#define ITER_COUNT 100
 
 #include "../1_int_to_bin.h"
 
@@ -12,12 +13,12 @@ TEST(int_to_bin, basic_work){
 	EXPECT_EQ(std::string (toBin<char>(-1)),	"11111111");
 	EXPECT_EQ(std::string (toBin<short>(-25)),	"1111111111100111");
 
-	//toBin<unsigned int>(0); //expect no compile
+	//toBin<unsigned int>(0); //expect не компилируется
 }
 
 //	Сравнение результатов работы фунции toBin с результатами stl реализации std::bitset
 TEST(int_to_bin, bitset_comparison){
-	for (int i = 0; i < 10; i++){
+	for (int i = 0; i < ITER_COUNT; i++){
 		int val_to_compare = rand();
 		val_to_compare *= ( i%2 ? 1 : -1 );
 		std::string examer = std::bitset<sizeof(int) * 8>(val_to_compare).to_string();
@@ -40,7 +41,7 @@ TEST(remove_dups, basic_work){
 
 //	Сравнение результатов RemoveDups с stl реализацией std::unique_copy
 TEST(remove_dups, unique_copy_comparison){
-	for (int i = 0; i < 10; i++){
+	for (int i = 0; i < ITER_COUNT; i++){
 		int letters_amount = rand() % 50 + 1;
 		char* data = new char[letters_amount];
 		for (int j = 0; j < letters_amount - 1; j++)
@@ -127,7 +128,7 @@ protected:
 
 		empty_list.setConfig(NULL, NULL);
 
-		ListNode* tmp_node = generateNode("small_list only element");
+		ListNode* tmp_node = generateNode("small_list's only element");
 		small_list.setConfig(tmp_node, tmp_node);
 
 		ListNode* chain_start = generateNode("big_list head");
@@ -160,7 +161,7 @@ TEST_F(list_serializing, one_elem_work){
 	EXPECT_EQ(small_list, new_list);
 }
 
-// Перенос списка из многих элементов через несколько файлов
+// Перенос списка из многих элементов через несколько файлов и несколько раз
 TEST_F(list_serializing, many_elem_work){
 	big_list.Serialize(tmp_file);
 	big_list.Serialize(tmp_file1);
@@ -179,7 +180,7 @@ TEST_F(list_serializing, many_elem_work){
 
 // Генерация случайных списков для переноса через файл
 TEST_F(list_serializing, randomed_lists){
-	for (int i = 0; i < 5; i++){
+	for (int i = 0; i < ITER_COUNT; i++){
 		int chain_checkpoints_amount = rand() % 10 + 1;
 		ListNode* chain_start = generateNode("Node_1");
 		ListNode* chain_end = insertAdditionalNodes(chain_start, rand() % 20);
