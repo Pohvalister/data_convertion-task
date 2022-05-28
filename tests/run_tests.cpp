@@ -5,6 +5,7 @@
 
 #include "../1_int_to_bin.h"
 
+//	Базовое тестирование работоспособности функции toBin
 TEST(int_to_bin, basic_work){
 	EXPECT_EQ(std::string (toBin<char>(0)),	"00000000");
 	EXPECT_EQ(std::string (toBin<char>(1)),	"00000001");
@@ -14,6 +15,7 @@ TEST(int_to_bin, basic_work){
 	//toBin<unsigned int>(0); //expect no compile
 }
 
+//	Сравнение результатов работы фунции toBin с результатами stl реализации std::bitset
 TEST(int_to_bin, bitset_comparison){
 	for (int i = 0; i < 10; i++){
 		int val_to_compare = rand();
@@ -26,6 +28,7 @@ TEST(int_to_bin, bitset_comparison){
 
 #include "../2_remove_dups.h"
 
+//	Базовое тестирование функции RemoveDups
 TEST(remove_dups, basic_work){
 	char data[] = "AAA BBB AAA";
 	RemoveDups(data);
@@ -35,6 +38,7 @@ TEST(remove_dups, basic_work){
 	EXPECT_EQ(examed,"A B A");
 }
 
+//	Сравнение результатов RemoveDups с stl реализацией std::unique_copy
 TEST(remove_dups, unique_copy_comparison){
 	for (int i = 0; i < 10; i++){
 		int letters_amount = rand() % 50 + 1;
@@ -86,6 +90,7 @@ protected:
 		return true;
 	}
 
+	// Расширение функций класса List для более удобного тестирования Serialize/Deserialize
 	struct T_List : public List{
 		void setConfig(ListNode* h, ListNode* t){
 			head = h;
@@ -137,6 +142,7 @@ protected:
 	FILE* tmp_file1 = tmpfile();
 };
 
+//	Базовая проверка работы функций Serialize/Deserialize
 TEST_F(list_serializing, work_checking){
 	List list;
 	EXPECT_NO_FATAL_FAILURE(list.Serialize(tmp_file));
@@ -145,6 +151,7 @@ TEST_F(list_serializing, work_checking){
 	EXPECT_NO_FATAL_FAILURE(list.Deserialize(tmp_file));
 }
 
+//	Проверка переноса списка из одного элемента
 TEST_F(list_serializing, one_elem_work){
 	small_list.Serialize(tmp_file);
 	rewind(tmp_file);
@@ -152,6 +159,8 @@ TEST_F(list_serializing, one_elem_work){
 	new_list.Deserialize(tmp_file);
 	EXPECT_EQ(small_list, new_list);
 }
+
+// Перенос списка из многих элементов через несколько файлов
 TEST_F(list_serializing, many_elem_work){
 	big_list.Serialize(tmp_file);
 	big_list.Serialize(tmp_file1);
@@ -168,6 +177,7 @@ TEST_F(list_serializing, many_elem_work){
 	EXPECT_EQ(new_list1, new_list2);
 }
 
+// Генерация случайных списков для переноса через файл
 TEST_F(list_serializing, randomed_lists){
 	for (int i = 0; i < 5; i++){
 		int chain_checkpoints_amount = rand() % 10 + 1;

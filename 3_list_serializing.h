@@ -2,7 +2,6 @@
 #define LIST_SERIALIZING_H
 #include <iostream>
 
-
 // структуру ListNode модифицировать нельзя
 struct ListNode {
 	ListNode *	prev;

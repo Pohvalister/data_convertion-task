@@ -74,7 +74,7 @@ void List::clear(){
 	count = 0;
 }
 
-//заполняет файл внутренними данными, сохраняя своё состояние
+//заполняет файл необходимыми данными, сохраняя своё состояние
 void List::Serialize(FILE* file){
 	FileHandler file_handler(file);
 	if (head == NULL){
@@ -117,7 +117,7 @@ void List::Serialize(FILE* file){
 	file_handler.put(curr->data);
 }
 
-//перезаписывает имеющиеся данные новыми из файла
+//перезаписывает свои данные новыми из файла
 void List::Deserialize(FILE* file){
 	FileHandler file_handler(file);
 	clear();
@@ -149,8 +149,3 @@ void List::Deserialize(FILE* file){
 	}
 	count = amount;
 }
-/* данные при сенриализации находятся в виде:
- * 	1) количество нод
- * 	2) вектор rand ссылок, в порядке их появления при проходе списка
- * 	3) строки, следующие друг за другом (в порядке их появления при переборе списка)
- */
