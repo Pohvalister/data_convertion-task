@@ -9,7 +9,7 @@ int main()
 	// first task usage
 	int val;
 	std::cin>>val;
-	std::cout << toBin<int>(val) << std::endl;
+	std::cout << toBin<short>(val) << std::endl;
 
 	// second task usage
 	char data[] = "AAA BBB AAA";

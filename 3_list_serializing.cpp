@@ -10,29 +10,28 @@ namespace {
 		: file(f){}
 		FILE * const file;
 
-		void put (const int val) const{ // мб назвать как гетеры?
-			fwrite(&val, sizeof(int), 1, file);
+		void put (const std::size_t val) const{
+			fwrite(&val, sizeof(std::size_t), 1, file);
 		}
 		void put (const std::vector<int>& vec) const{
-			int len = vec.size();
-			fwrite(&len, sizeof(int), 1, file);
+			std::size_t len = vec.size();
+			put(len);
 			fwrite((int *) &vec[0], sizeof(int), len, file);
 		}
 		void put (const std::string& str) const{
-			int len = str.size();
-			fwrite(&len, sizeof(int), 1, file);
+			std::size_t len = str.size();
+			put(len);
 			fwrite(str.c_str(), sizeof(char), len, file);
 		}
 
-		int getVal() const{
-			int val;
-			fread(&val, sizeof(int), 1, file);
+		std::size_t getVal() const{
+			std::size_t val;
+			fread(&val, sizeof(std::size_t), 1, file);
 			return val;
 		}
 
 		std::vector<int> getVec() const{
-			int len;//getVal
-			fread(&len, sizeof(int), 1, file);
+			std::size_t len = getVal();
 			if (!len)
 				return  {};
 
@@ -42,8 +41,7 @@ namespace {
 		}
 
 		std::string getStr() const{
-			int len;
-			fread(&len, sizeof(int), 1, file);
+			std::size_t len = getVal();
 			if (!len)
 				return "";
 
@@ -53,6 +51,10 @@ namespace {
 			return std::string(tmp);
 		}
 	};
+}
+
+List::~List(){
+	clear();
 }
 
 void List::clear(){
@@ -81,10 +83,10 @@ void List::Serialize(FILE* file){
 		return;
 	}
 
-	std::unordered_map<ListNode*, int> number_comp;
+	std::unordered_map<ListNode*, std::size_t> number_comp;
 
 	ListNode* curr = head;
-	int counter = 1;
+	std::size_t counter = 1;
 	while (curr != tail){
 		assert(number_comp.find(curr) == number_comp.end());
 		number_comp[curr] = counter++;
@@ -109,7 +111,6 @@ void List::Serialize(FILE* file){
 	curr = head;
 	counter = 0;
 	while(curr != tail){
-		std::cout<<"data put: "<< curr->data << '\n';
 		file_handler.put(curr->data);
 		curr = curr->next;
 	}
@@ -121,7 +122,7 @@ void List::Deserialize(FILE* file){
 	FileHandler file_handler(file);
 	clear();
 
-	int amount = file_handler.getVal();
+	std::size_t amount = file_handler.getVal();
 	if (!amount)
 		return;
 

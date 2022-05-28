@@ -14,6 +14,8 @@ struct ListNode {
 class List {
 public:
 
+	~List();
+
 	void Serialize	(FILE * file); // сохранение в файл (файл открыт с помощью fopen(path, "wb"))
 	void Deserialize (FILE * file); // загрузка из файла (файл открыт с помощью fopen(path, "rb"))
 
@@ -24,8 +26,6 @@ protected:
 
 public:
 	void clear();
-
-	struct DataCollector;
 };
 
 #endif //LIST_SERIALIZING_H
