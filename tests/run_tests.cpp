@@ -60,11 +60,10 @@ TEST(remove_dups, unique_copy_comparison){
 
 #include "../3_list_serializing.h"
 
-
 class list_serializing : public ::testing::Test{
 protected:
 	static ListNode* generateNode(std::string d, ListNode* p, ListNode* n, ListNode* r){
-		ListNode* answ = new ListNode();
+		auto* answ = new ListNode();
 		answ->data = d;
 		answ->prev = p;
 		answ->next = n;
@@ -82,18 +81,26 @@ protected:
 		return curr;
 	}
 	static bool compare(ListNode ln1, ListNode ln2){
-		bool answ = (ln1.data == ln2.data);
-		answ &= (ln1.prev == NULL && ln2.prev == NULL) || (ln1.prev->data == ln2.prev->data);//неправильное сравнение
-		answ &= (ln1.next == NULL && ln2.next == NULL) || (ln1.next->data == ln2.next->data);
-		answ &= (ln1.rand == NULL && ln2.rand == NULL) || (ln1.next->rand == ln2.next->rand);
-		return answ;
+		if (ln1.data != ln2.data) return false;
+		if (!((ln1.prev == NULL && ln2.prev == NULL) || (ln1.prev->data == ln2.prev->data))) return false;
+		if (!((ln1.next == NULL && ln2.next == NULL) || (ln1.next->data == ln2.next->data))) return false;
+		if (!((ln1.rand == NULL && ln2.rand == NULL) || (ln1.rand->data == ln2.rand->data))) return false;
+		return true;
 	}
 
 	struct T_List : public List{
-		void setConfig(int c, ListNode* h, ListNode* t){
-			count = c;
+		void setConfig(ListNode* h, ListNode* t){
 			head = h;
 			tail = t;
+			if (h == NULL)
+				count = 0;
+			else{
+				count = 1;
+				while (h != t){
+					count++;
+					h = h->next;
+				}
+			}
 		}
 
 		bool operator==(const T_List& l2) const{
@@ -112,19 +119,18 @@ protected:
 
 protected:
 	void SetUp(){
-		srand(time(0));
 		tmp_file = tmpfile();
 		rewind(tmp_file);
 		tmp_file1 = tmpfile();
 		rewind(tmp_file1);
 
-		empty_list.setConfig(0, NULL, NULL);
+		empty_list.setConfig(NULL, NULL);
 		ListNode* tmp_node = generateNode("Hello", NULL, NULL, NULL);
-		small_list.setConfig(1, tmp_node, tmp_node);
+		small_list.setConfig(tmp_node, tmp_node);
 		ListNode* chain_start = generateNode("head", NULL, NULL, NULL);
 		ListNode* chain_end = insertAdditionalNodes(chain_start, 20);
 		chain_end = insertAdditionalNodes(chain_end, 5);
-		big_list.setConfig(26, chain_start, chain_end);
+		big_list.setConfig(chain_start, chain_end);
 	}
 
 protected:
@@ -157,9 +163,28 @@ TEST_F(list_serializing, basic_work){
 	new_list1.Deserialize(tmp_file);
 	new_list2.Deserialize(tmp_file1);
 	EXPECT_EQ(new_list1, new_list2);
+	rewind(tmp_file1);
+	new_list2.Deserialize(tmp_file1);
+	EXPECT_EQ(new_list1, new_list2);
 }
 
 TEST_F(list_serializing, randomed_lists){
+	for (int i = 0; i < 5; i++){
+		int chain_checkpoints_amount = rand() % 10 + 1;
+		ListNode* chain_start = generateNode("Node_1", NULL, NULL, NULL);
+		ListNode* chain_end = insertAdditionalNodes(chain_start, 10);
+		for (int j = 0; j < chain_checkpoints_amount; j++)
+			chain_end = insertAdditionalNodes(chain_end, 10);
 
+		T_List generated_list;
+		generated_list.setConfig(chain_start, chain_end);
+
+		rewind(tmp_file);
+		generated_list.Serialize(tmp_file);
+		rewind(tmp_file);
+		T_List output_list;
+		output_list.Deserialize(tmp_file);
+		EXPECT_EQ(generated_list, output_list);
+	}
 }
 

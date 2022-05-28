@@ -63,7 +63,6 @@ void List::clear(){
 
 	while (head != tail){
 		ListNode* new_head = head->next;
-		//new_head->prev = NULL;
 		delete head;
 		head = new_head;
 	}
@@ -132,7 +131,7 @@ void List::Deserialize(FILE* file){
 	ListNode* curr = head;
 	for (int i = 1; i < amount; i++){
 		pointer_comp[i] = curr;
-		ListNode* new_curr = new ListNode();
+		auto new_curr = new ListNode();
 		new_curr->prev = curr;
 		curr->next = new_curr;
 		curr = new_curr;
@@ -145,6 +144,7 @@ void List::Deserialize(FILE* file){
 	for (int rand_num : structure){
 		curr->rand = pointer_comp[rand_num];
 		curr->data = file_handler.getStr();
+		curr = curr->next;
 	}
 	count = amount;
 }
