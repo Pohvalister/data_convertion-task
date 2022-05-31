@@ -8,10 +8,10 @@
 
 //	Базовое тестирование работоспособности функции toBin
 TEST(int_to_bin, basic_work){
-	EXPECT_EQ(std::string (toBin<char>(0)),	"00000000");
-	EXPECT_EQ(std::string (toBin<char>(1)),	"00000001");
-	EXPECT_EQ(std::string (toBin<char>(-1)),	"11111111");
-	EXPECT_EQ(std::string (toBin<short>(-25)),	"1111111111100111");
+	EXPECT_EQ(toBin<char>(0),	"00000000");
+	EXPECT_EQ(toBin<char>(1),	"00000001");
+	EXPECT_EQ(toBin<char>(-1),	"11111111");
+	EXPECT_EQ(toBin<short>(-25),	"1111111111100111");
 
 	//toBin<unsigned int>(0); //expect не компилируется
 }
@@ -58,6 +58,7 @@ TEST(remove_dups, unique_copy_comparison){
 		std::string examed(data);
 
 		EXPECT_EQ(examer2, examed);
+		delete[] data;
 	}
 }
 

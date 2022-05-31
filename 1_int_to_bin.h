@@ -32,8 +32,8 @@ namespace {
 }
 
 template <typename T>
-char* toBin(T val){
-	char* answ = new char[getSizeOf<T>() + 1];
+std::string toBin(T val){
+	std::string answ(getSizeOf<T>(), '\0');
 	bool add = false, neg = false;
 	if (val < 0){
 		val *= -1;
@@ -45,7 +45,6 @@ char* toBin(T val){
 		add = ! byte & add;
 		val /= 2;
 	}
-	answ[getSizeOf<T>()] = '\0';
 	return answ;
 }
 

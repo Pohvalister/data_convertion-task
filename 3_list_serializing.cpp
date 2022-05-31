@@ -35,9 +35,9 @@ namespace {
 			if (!len)
 				return  {};
 
-			int *tmp = new int[len];
-			fread(tmp, sizeof(int), len, file);
-			return std::vector<int>(tmp, tmp + len);
+			std::vector<int> answ(len);
+			fread(&answ[0], sizeof(int), len, file);
+			return answ;
 		}
 
 		std::string getStr() const{
@@ -45,10 +45,9 @@ namespace {
 			if (!len)
 				return "";
 
-			char* tmp = new char[len + 1];
-			fread(tmp, sizeof(char), len, file);
-			tmp[len] = '\0';
-			return std::string(tmp);
+			std::string answ(len, '\0');
+			fread(&answ[0], sizeof(char), len, file);
+			return answ;
 		}
 	};
 }

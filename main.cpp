@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 #include "1_int_to_bin.h"
 #include "2_remove_dups.h"
@@ -21,6 +22,7 @@ int main()
 	list.clear();
 	FILE* tmp_file = tmpfile();
 	list.Serialize(tmp_file);
+	rewind(tmp_file);
 	list.Deserialize(tmp_file);
 
 	return 0;
